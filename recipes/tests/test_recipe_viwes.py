@@ -11,17 +11,17 @@ class RecipeViewsTest(RecipeTestBase):
         view = resolve(reverse('recipes:home'))
         self.assertIs(view.func, views.home)
 
-    @skip('WIP') 
+    @skip('WIP')
     def test_recipe_home_view_returns_status_code_200_OK(self):
         response = self.client.get(reverse('recipes:home'))
         self.assertEqual(response.status_code, 200)
 
-    @skip('WIP') 
+    @skip('WIP')
     def test_recipe_home_view_loads_correct_template(self):
         response = self.client.get(reverse('recipes:home'))
         self.assertTemplateUsed(response, 'recipes/pages/home.html')
 
-    @skip('WIP') 
+    @skip('WIP')
     def test_recipe_home_template_shows_no_recipes_found_if_no_recipes(self):
         response = self.client.get(reverse('recipes:home'))
         self.assertIn(
@@ -63,7 +63,7 @@ class RecipeViewsTest(RecipeTestBase):
             reverse('recipes:recipe', kwargs={'id': 1000})
         )
         self.assertEqual(response.status_code, 404)
-    
+
     def test_recipe_home_template_dont_load_recipes_not_published(self):
         """Test recipe is_published False dont show"""
         # Need a recipe for this test
@@ -79,5 +79,15 @@ class RecipeViewsTest(RecipeTestBase):
 
         self.assertEqual(response.status_code, 404)
 
-    
-        
+    def test_recipe_search_uses_correct_view_function(self):
+        resolved = resolve(reverse('recipes:search'))
+        self.assertIs(resolved.func, views.search)
+
+    def test_recipe_search_loads_correct_template(self):
+        response = self.client.get(reverse('recipes:search') + '?q=teste')
+        self.assertTemplateUsed(response, 'recipes/pages/search.html')
+
+    def test_recipe_search_raises_404_if_no_search_term(self):
+        url = reverse('recipes:search')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)

@@ -14,7 +14,7 @@ class RecipeModelTest(RecipeTestBase):
             author=self.make_author(username='newuser'),
             title='Recipe Title',
             description='Recipe Description',
-            slug='recipe-slug',
+            slug='recipe-slug-for-no-defaults',
             preparation_time=10,
             preparation_time_unit='Minutos',
             servings=5,
@@ -50,4 +50,15 @@ class RecipeModelTest(RecipeTestBase):
         self.assertFalse(
             recipe.is_published,
             msg='Recipe is_published is not False',
+        )
+
+    def test_recipe_string_representation(self):
+        needed = 'Testing Representation'
+        self.recipe.title = needed
+        self.recipe.full_clean()
+        self.recipe.save()
+        self.assertEqual(
+            str(self.recipe), needed,
+            msg=f'Recipe string representation must be '
+                f'"{needed}" but "{str(self.recipe)}" was received.'
         )
