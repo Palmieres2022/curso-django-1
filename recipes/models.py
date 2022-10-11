@@ -2,7 +2,6 @@ from distutils.command.upload import upload
 from email.policy import default
 from turtle import title, update
 from unicodedata import category
-from unittest.util import _MAX_LENGTH
 from django.contrib.auth.models import User
 from django.db import models
 

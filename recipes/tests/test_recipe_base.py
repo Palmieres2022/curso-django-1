@@ -4,13 +4,10 @@ from recipes.models import Category, Recipe, User
 
 class RecipeTestBase(TestCase):
     def setUp(self) -> None:
-        self.make_recipe()
         return super().setUp()
-
 
     def make_category(self, name='Category'):
         return Category.objects.create(name=name)
-
 
     def make_author(
         self,
@@ -27,7 +24,7 @@ class RecipeTestBase(TestCase):
             password=password,
             email=email,
         )
-    
+
     def make_recipe(
         self,
         category_data=None,
