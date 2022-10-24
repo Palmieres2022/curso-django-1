@@ -9,6 +9,7 @@ def register_view(request):
     form = RegisterForm(register_form_data)
     return render(request, 'authors/pages/register_view.html', {
         'form': form,
+        'form_action': reverse('authors:create'),
     })
 
 
