@@ -2,6 +2,7 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from .forms import RegisterForm
 from django.contrib import messages
+from django.urls import reverse
 
 
 def register_view(request):
