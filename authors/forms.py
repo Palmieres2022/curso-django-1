@@ -37,7 +37,7 @@ class RegisterForm(forms.ModelForm):
         add_placeholder(self.fields['last_name'], 'Ex.: Doe')
         add_placeholder(self.fields['password'], 'Type your password')
         add_placeholder(self.fields['password2'], 'Repeat your password')
-        
+
     username = forms.CharField(
         label='Username',
         help_text=(
@@ -131,3 +131,15 @@ class RegisterForm(forms.ModelForm):
                     password_confirmation_error,
                 ],
             })
+
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '')
+        exists = User.objects.filter(email=email).exists()
+
+        if exists:
+            raise ValidationError(
+                'User e-mail is already in use', code='invalid',
+            )
+
+        return email
