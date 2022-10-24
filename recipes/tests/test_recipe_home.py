@@ -1,10 +1,8 @@
 from unittest.mock import patch
-
 from django.urls import resolve, reverse
 from recipes import views
 
 from .test_recipe_base import RecipeTestBase
-
 
 class RecipeHomeViewTest(RecipeTestBase):
     def test_recipe_home_view_function_is_correct(self):
