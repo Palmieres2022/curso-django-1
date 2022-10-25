@@ -409,6 +409,20 @@ h6 {
   background: var(--color-warning-light);
 }
 
+.inline-form {
+  display: inline;
+}
+
+.plaintext-button {
+  display: inline;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-primary);
+  font-size: 1.6rem;
+}
+vv
+
 @media (max-width: 600px) {
 
   .main-content-list,
