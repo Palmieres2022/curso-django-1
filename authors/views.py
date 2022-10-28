@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from recipes.models import Recipe
+from authors.forms.recipe_form import AuthorRecipeForm
 
 
 def register_view(request):
@@ -29,8 +31,8 @@ def register_create(request):
         user.set_password(user.password)
         user.save()
         messages.success(request, 'Your user is created, please log in.')
-        
-        del(request.session['register_form_data'])
+
+        del (request.session['register_form_data'])
         return redirect(reverse('authors:login'))
 
     return redirect('authors:register')
@@ -49,7 +51,6 @@ def login_create(request):
         raise Http404()
 
     form = LoginForm(request.POST)
-    login_url = reverse('authors:login')
 
     if form.is_valid():
         authenticated_user = authenticate(
@@ -65,21 +66,59 @@ def login_create(request):
     else:
         messages.error(request, 'Invalid username or password')
 
-    return redirect(login_url)
+    return redirect(reverse('authors:dashboard'))
 
-    
+
 @login_required(login_url='authors:login', redirect_field_name='next')
 def logout_view(request):
     if not request.POST:
+        messages.error(request, 'Invalid logout request')
         return redirect(reverse('authors:login'))
 
     if request.POST.get('username') != request.user.username:
+        messages.error(request, 'Invalid logout user')
         return redirect(reverse('authors:login'))
 
+    messages.success(request, 'Logged out successfully')
     logout(request)
     return redirect(reverse('authors:login'))
- 
 
 
+@login_required(login_url='authors:login', redirect_field_name='next')
+def dashboard(request):
+    recipes = Recipe.objects.filter(
+        is_published=False,
+        author=request.user
+    )
+    return render(
+        request,
+        'authors/pages/dashboard.html',
+        context={
+            'recipes': recipes,
+        }
+    )
 
-            
+
+@login_required(login_url='authors:login', redirect_field_name='next')
+def dashboard_recipe_edit(request, id):
+    recipe = Recipe.objects.filter(
+        is_published=False,
+        author=request.user,
+        pk=id,
+    ).first()
+
+    if not recipe:
+        raise Http404()
+    
+    form = AuthorRecipeForm(
+        data=request.POST or None,
+        instance=recipe
+    )
+
+    return render(
+        request,
+        'authors/pages/dashboard_recipe.html',
+        context={
+             'form': form
+        }
+    )

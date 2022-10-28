@@ -1,5 +1,6 @@
 from unittest.mock import patch
 from django.urls import resolve, reverse
+from pytest import skip
 from recipes import views
 from .test_recipe_base import RecipeTestBase
 
@@ -33,6 +34,8 @@ class RecipeHomeViewTest(RecipeTestBase):
         self.assertIn('Recipe Title', content)
         self.assertEqual(len(response_context_recipes), 1)
 
+
+    @skip
     def test_recipe_home_template_dont_load_recipes_not_published(self):
         """Test recipe is_published False dont show"""
         # Need a recipe for this test

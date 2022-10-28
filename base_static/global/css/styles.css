@@ -357,7 +357,9 @@ h6 {
   color: var(--color-error-dark);
 }
 
-.form-content input {
+.form-content input,
+.form-content textarea,
+.form-content select {
   width: 100%;
   padding: 1rem;
   border-radius: 0.4rem;
@@ -421,7 +423,24 @@ h6 {
   color: var(--color-primary);
   font-size: 1.6rem;
 }
-vv
+/* Authors */
+.login-message {
+  margin: 1rem 0;
+}
+
+.authors-dashboard-container {
+  max-width: 64rem;
+  text-align: left;
+  padding: var(--spacing-gutter-medium);
+  margin: 0 auto;
+}
+
+.authors-dashboard-container h3,
+.authors-dashboard-container p,
+.authors-dashboard-container ul {
+  list-style-type: none;
+  margin: 1rem 0;
+}
 
 @media (max-width: 600px) {
 

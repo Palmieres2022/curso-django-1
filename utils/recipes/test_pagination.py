@@ -1,5 +1,4 @@
 from unittest import TestCase
-
 from utils.recipes.pagination import make_pagination_range
 
 

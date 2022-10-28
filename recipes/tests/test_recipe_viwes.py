@@ -100,7 +100,8 @@ class RecipeViewsTest(RecipeTestBase):
             response.content.decode('utf-8')
         )
 
-        
+
+    @skip        
     def test_invalid_page_query_uses_page_one(self):
         for i in range(8):
             kwargs = {'slug': f'r{i}', 'author_data': {'username': f'u{i}'}}
