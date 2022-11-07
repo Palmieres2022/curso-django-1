@@ -441,6 +441,20 @@ h6 {
   list-style-type: none;
   margin: 1rem 0;
 }
+.left {
+  text-align: left;
+}
+.span-2 {
+  grid-column: span 2;
+}
+img {
+  max-width: 100%;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
 
 @media (max-width: 600px) {
 
