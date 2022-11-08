@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'recipes',
     'authors',
-    'debug_toolbar',
+    'tag',
+    'debug_toolbar', 
 ]
 
 MIDDLEWARE = [

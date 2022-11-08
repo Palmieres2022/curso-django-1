@@ -16,5 +16,10 @@ urlpatterns = [
         views.RecipeListViewCategory.as_view(), name="category"
     ),
     path('recipes/<int:id>/', views.recipe, name="recipe"),
+    path(
+        'recipes/theory/',
+        views.theory,
+        name='theory',
+    )
 
 ]

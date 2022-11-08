@@ -1,13 +1,34 @@
-from django.db.models import Q
-from django.http.response import Http404
-from django.views.generic import DetailView, ListView
-from utils.pagination import make_pagination
-from recipes.models import Recipe
-from django.http import JsonResponse
-from django.forms.models import model_to_dict
 import os
 
+from django.db.models import F, Q
+from django.db.models.aggregates import Count
+from django.db.models.functions import Concat
+from django.forms.models import model_to_dict
+from django.http import JsonResponse
+from django.http.response import Http404
+from django.shortcuts import render
+from django.views.generic import DetailView, ListView
+
+from recipes.models import Recipe
+from utils.pagination import make_pagination
+
 PER_PAGE = int(os.environ.get('PER_PAGE', 6))
+
+
+def theory(request, *args, **kwargs):
+    recipes = Recipe.objects.get_published()
+    number_of_recipes = recipes.aggregate(number=Count('id'))
+
+    context = {
+        'recipes': recipes,
+        'number_of_recipes': number_of_recipes['number']
+    }
+    return render(
+        request,
+        'recipes/pages/theory.html',
+        context=context
+    )
+
 
 class RecipeListViewBase(ListView):
     model = Recipe
@@ -35,8 +56,10 @@ class RecipeListViewBase(ListView):
         )
         return ctx
 
+
 class RecipeListViewHome(RecipeListViewBase):
     template_name = 'recipes/pages/home.html'
+
 
 class RecipeListViewHomeApi(RecipeListViewBase):
     template_name = 'recipes/pages/home.html'
@@ -49,7 +72,6 @@ class RecipeListViewHomeApi(RecipeListViewBase):
             list(recipes_list),
             safe=False
         )
-
 
 
 class RecipeListViewCategory(RecipeListViewBase):
@@ -102,6 +124,8 @@ class RecipeListViewSearch(RecipeListViewBase):
         })
 
         return ctx
+
+
 def recipe(request, id):
     recipe = get_object_or_404(Recipe, pk=id, is_published=True,)
 
@@ -109,6 +133,8 @@ def recipe(request, id):
         'recipe': recipe,
         'is_detail_page': True,
     })
+
+
 class RecipeDetail(DetailView):
     model = Recipe
     context_object_name = 'recipe'
@@ -121,6 +147,7 @@ class RecipeDetail(DetailView):
         })
 
         return ctx
+
 
 class RecipeDetailAPI(RecipeDetail):
     def render_to_response(self, context, **response_kwargs):
@@ -143,5 +170,3 @@ class RecipeDetailAPI(RecipeDetail):
             recipe_dict,
             safe=False,
         )
-
-
