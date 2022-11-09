@@ -9,32 +9,25 @@
     <div class="recipe-title-container">
         <h2 class="recipe-title">
             <a href="{{ recipe.get_absolute_url }}">
-                {{ recipe.title }}</h2>
+                {{ recipe.title }}
             </a>
+        </h2>
     </div>
-
     <div class="recipe-author">
-        
-        <span class="recipe-author-item">
-            <i class="fas fa-user"></i>
-            {% if recipe.author is not None %}
+        {% if recipe.author is not None %}
+            <span class="recipe-author-item">
+                <i class="fas fa-user"></i>
                 {% if recipe.author.first_name %}
                     {{ recipe.author.first_name }} {{ recipe.author.last_name }}
                 {% else %}
                     {{ recipe.author.username }}
                 {% endif %}
-            {% else %}
-                Desconhecido
-            {% endif %}
-        </span>       
-        
-        
+            </span>
+        {% endif %}
         <span class="recipe-author-item">
             <i class="fas fa-calendar-alt"></i>
             {{ recipe.created_at|date:"d/m/Y" }} às {{ recipe.created_at|date:"H:i" }}
         </span>
-        
-
         {% if recipe.category is not None %}
             <span class="recipe-author-item">
                 <a href="{% url 'recipes:category' recipe.category.id %}">
@@ -44,11 +37,9 @@
             </span>
         {% endif %}
     </div>
-
     <div class="recipe-content">
         <p>{{ recipe.description }}</p>
     </div>
-
     <div class="recipe-meta-container">
         <div class="recipe-meta recipe-preparation">
             <h3 class="recipe-meta-title"><i class="fas fa-stopwatch"></i> Preparo</h3>
@@ -64,20 +55,30 @@
         </div>
     </div>
     {% if is_detail_page is not True %}
-    <footer class="recipe-footer">
-        <a class="recipe-read-more button button-dark button-full-width" href="{% url 'recipes:recipe' recipe.id %}">
-            <i class="fas fa-eye"></i>
-            <span>ver mais...</span>
-        </a>
-    </footer>
+        <footer class="recipe-footer">
+            <a class="recipe-read-more button button-dark button-full-width" href="{% url 'recipes:recipe' recipe.id %}">
+                <i class="fas fa-eye"></i>
+                <span>ver mais...</span>
+            </a>
+        </footer>
     {% endif %}
-
-    {% if is_detail_page is True%}
+    {% if is_detail_page is True %}
         <div class="preparation-steps">
             {% if recipe.preparation_steps_is_html is True %}
                 {{ recipe.preparation_steps|safe }}
-            {% else %}        
-                {{ recipe.preparation_steps|linebreaksbr }}        
+            {% else %}
+                {{ recipe.preparation_steps|linebreaksbr }}
+            {% endif %}
+
+            {% if recipe.tags.all %}
+                <p>
+                    Tags:
+                    {% for tag in recipe.tags.all %}
+                        <a href="{% url 'recipes:tag' tag.slug %}">
+                            {{ tag.name }}
+                        </a>, 
+                    {% endfor %}
+                </p>
             {% endif %}
         </div>
     {% endif %}

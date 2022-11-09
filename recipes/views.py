@@ -1,8 +1,8 @@
 import os
 
-from django.db.models import F, Q
+from django.db.models import Q
 from django.db.models.aggregates import Count
-from django.db.models.functions import Concat
+#from django.db.models.functions import Concat
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.http.response import Http404
@@ -11,6 +11,7 @@ from django.views.generic import DetailView, ListView
 
 from recipes.models import Recipe
 from utils.pagination import make_pagination
+from tag.models import Tag
 
 PER_PAGE = int(os.environ.get('PER_PAGE', 6))
 
@@ -42,6 +43,7 @@ class RecipeListViewBase(ListView):
             is_published=True,
         )
         qs = qs.select_related('author', 'category')
+        qs = qs.prefetch_related('tags')
         return qs
 
     def get_context_data(self, *args, **kwargs):
@@ -91,10 +93,36 @@ class RecipeListViewCategory(RecipeListViewBase):
         qs = qs.filter(
             category__id=self.kwargs.get('category_id')
         )
+
         if not qs:
             raise Http404()
-
         return qs
+
+class RecipeListViewTag(RecipeListViewBase):
+    template_name = 'recipes/pages/tag.html'
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        qs = qs.filter(tags__slug=self.kwargs.get('slug', ''))
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        page_title = Tag.objects.filter(
+            slug=self.kwargs.get('slug', '')
+        ).first()
+
+        if not page_title:
+            page_title = 'No recipes found'
+
+        page_title = f'{page_title} - Tag |'
+
+        ctx.update({
+            'page_title': page_title,
+        })
+
+        return ctx
+
 
 
 class RecipeListViewSearch(RecipeListViewBase):
@@ -102,8 +130,10 @@ class RecipeListViewSearch(RecipeListViewBase):
 
     def get_queryset(self, *args, **kwargs):
         search_term = self.request.GET.get('q', '')
+
         if not search_term:
             raise Http404()
+
         qs = super().get_queryset(*args, **kwargs)
         qs = qs.filter(
             Q(
@@ -126,22 +156,19 @@ class RecipeListViewSearch(RecipeListViewBase):
         return ctx
 
 
-def recipe(request, id):
-    recipe = get_object_or_404(Recipe, pk=id, is_published=True,)
-
-    return render(request, 'recipes/pages/recipe-view.html', context={
-        'recipe': recipe,
-        'is_detail_page': True,
-    })
-
-
 class RecipeDetail(DetailView):
     model = Recipe
     context_object_name = 'recipe'
     template_name = 'recipes/pages/recipe-view.html'
 
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        qs = qs.filter(is_published=True)
+        return qs
+
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
+
         ctx.update({
             'is_detail_page': True
         })

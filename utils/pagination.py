@@ -1,4 +1,5 @@
 import math
+
 from django.core.paginator import Paginator
 
 
