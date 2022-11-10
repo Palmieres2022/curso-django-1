@@ -58,7 +58,7 @@ class RecipeMixin:
             is_published=is_published,
         )
 
-    def make_recipe_in_batch(self, qtd=10):
+    def make_recipe_in_batch(self, qtd=8):
         recipes = []
         for i in range(qtd):
             kwargs = {
@@ -69,7 +69,7 @@ class RecipeMixin:
             recipe = self.make_recipe(**kwargs)
             recipes.append(recipe)
         return recipes
-        
+
 
 class RecipeTestBase(TestCase, RecipeMixin):
     def setUp(self) -> None:
