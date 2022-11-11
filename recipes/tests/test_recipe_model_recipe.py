@@ -44,6 +44,7 @@ class RecipeModelTest(RecipeTestBase):
             msg='Recipe preparation_steps_is_html is not False'
         )
 
+    @skip('WIP')
     def test_recipe_is_published_is_false_by_default(self):
         recipe = self.make_recipe_no_defaults()
         self.assertFalse(
@@ -51,6 +52,7 @@ class RecipeModelTest(RecipeTestBase):
             msg='Recipe is_published is not False',
         )
 
+    @skip('WIP')
     def test_recipe_string_representation(self):
         needed = 'Testing Representation'
         self.recipe.title = needed
