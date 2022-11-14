@@ -13,7 +13,7 @@ class RecipeModelTest(RecipeTestBase):
         recipe = Recipe(
             category=self.make_category(name='Test Default Category'),
             author=self.make_author(username='newuser'),
-            title='Recipe Title',
+            title='Recipe Title 1',
             description='Recipe Description',
             slug='recipe-slug-for-no-defaults',
             preparation_time=10,
@@ -41,10 +41,9 @@ class RecipeModelTest(RecipeTestBase):
         recipe = self.make_recipe_no_defaults()
         self.assertFalse(
             recipe.preparation_steps_is_html,
-            msg='Recipe preparation_steps_is_html is not False'
+            msg='Recipe preparation_steps_is_html is not False',
         )
 
-    @skip('WIP')
     def test_recipe_is_published_is_false_by_default(self):
         recipe = self.make_recipe_no_defaults()
         self.assertFalse(
@@ -52,7 +51,6 @@ class RecipeModelTest(RecipeTestBase):
             msg='Recipe is_published is not False',
         )
 
-    @skip('WIP')
     def test_recipe_string_representation(self):
         needed = 'Testing Representation'
         self.recipe.title = needed

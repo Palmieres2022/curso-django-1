@@ -13,22 +13,21 @@ from ..serializers import RecipeSerializer, TagSerializer
 
 
 class RecipeAPIv2Pagination(PageNumberPagination):
-    page_size = 2
+    page_size = 3
 
 class RecipeAPIv2ViewSet(ModelViewSet):
     queryset = Recipe.objects.get_published()
     serializer_class = RecipeSerializer
     pagination_class = RecipeAPIv2Pagination    
     permission_classes = [IsAuthenticatedOrReadOnly, ]
+    http_method_names = ['get', 'options', 'head', 'patch', 'post', 'delete']
 
     def get_serializer_class(self):
         return super().get_serializer_class()
+        
     def get_serializer(self, *args, **kwargs):
         return super().get_serializer(*args, **kwargs)
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["example"] = 'this is in context now'
-        return context
+   
     def get_queryset(self):
         qs = super().get_queryset()
         category_id = self.request.query_params.get('category_id', '')
